@@ -9,6 +9,7 @@ class Observations:
         """
         self.observations = {}
         
+
     def add_observation(self, row: int, col: int, 
                         sensor_type: str, reading: str):
         """Add a observation"""
@@ -17,21 +18,21 @@ class Observations:
         if key not in self.observations:
             self.observations[key] = {}
             
-        # Substitui leitura anterior do mesmo sensor (política do projeto)
         self.observations[key][sensor_type] = reading
         
+
     def get_observation(self, row: int, col: int, 
                        sensor_type: str) -> Optional[str]:
-        """Obtém leitura mais recente de um sensor em uma célula"""
+        """Get a observarion"""
         key = (row, col)
         if key in self.observations:
             return self.observations[key].get(sensor_type)
         return None
     
     def get_all_observations(self) -> Dict:
-        """Retorna todas as observações"""
+        """Return observations"""
         return self.observations.copy()
     
     def clear(self):
-        """Limpa todas as observações"""
+        """Clear observations"""
         self.observations.clear()
