@@ -1,56 +1,17 @@
-gpr:
-  cost: 5
-  distributions:
-    distance: 0
-    probabilities:
-      STRONG: 0.75
-      MODERATE: 0.15
-      WEAK: 0.07
-      NONE: 0.03
-    distance: 1
-    probabilities:
-      STRONG: 0.10
-      MODERATE: 0.70
-      WEAK: 0.15
-      NONE: 0.05
-    distance: 2
-    probabilities:
-      STRONG: 0.05
-      MODERATE: 0.15
-      WEAK: 0.65
-      NONE: 0.15
-    distance: 3
-    probabilities:
-      STRONG: 0.02
-      MODERATE: 0.08
-      WEAK: 0.10
-      NONE: 0.75                  
-mag:
-  cost: 3
-  distributions:
-    distance: 0
-    probabilities:
-      HIGH : 0.70
-      MEDIUM: 0.20
-      LOW: 0.10
-    distance: 1
-    probabilities:
-      HIGH : 0.15
-      MEDIUM: 0.65
-      LOW: 0.20
-    distance: 2
-    probabilities:
-      HIGH : 0.10
-      MEDIUM: 0.25
-      LOW: 0.65
-vis:
-  cost: 1
-  distributions:
-    distance: 0
-    probabilities:
-      SUSPICIOUS: 0.60
-      NORMAL: 0.40
-    distance: 1
-    probabilities:
-      SUSPICIOUS: 0.20
-      NORMAL: 0.80
+costs:
+  GPR: 5
+  MAG: 3
+  VIS: 1
+cpts:
+  GPR:
+    0: {STRONG: 0.75, MODERATE: 0.15, WEAK: 0.07, NONE: 0.03}
+    1: {STRONG: 0.10, MODERATE: 0.70, WEAK: 0.15, NONE: 0.05}
+    2: {STRONG: 0.05, MODERATE: 0.15, WEAK: 0.65, NONE: 0.15}
+    default: {STRONG: 0.02, MODERATE: 0.08, WEAK: 0.15, NONE: 0.75}
+  MAG:
+    0: {HIGH: 0.70, MEDIUM: 0.20, LOW: 0.10}
+    1: {HIGH: 0.15, MEDIUM: 0.65, LOW: 0.20}
+    default: {HIGH: 0.10, MEDIUM: 0.25, LOW: 0.65}
+  VIS:
+    0: {SUSPICIOUS: 0.60, NORMAL: 0.40}
+    default: {SUSPICIOUS: 0.20, NORMAL: 0.80}
