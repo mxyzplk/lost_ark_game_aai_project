@@ -65,13 +65,14 @@ class Grid:
             for j in range(self.columns):
                 self.positions[i,j].set_initial_state(p)
 
+
     def set_cpts(self):
         """
         Set the sensors
         """
-        self.gpr = CPT("GPR")
-        self.mag = CPT("MAG")
-        self.vis = CPT("VIS")
+        self.gpr = CPT("GPR", self.rng)
+        self.mag = CPT("MAG", self.rng)
+        self.vis = CPT("VIS", self.rng)
 
         self.sensors = {"GPR": self.gpr, "MAG": self.mag, "VIS": self.vis}
 

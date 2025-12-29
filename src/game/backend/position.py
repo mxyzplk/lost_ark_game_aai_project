@@ -4,7 +4,7 @@ class Position:
         self.y = int(y)
         self.p = None
         self.p0= None
-        self.status = {'GPR': False,'MAG': False,'VIS': False}
+        self.status = {'GPR': "Not Used",'MAG': "Not Used",'VIS': "Not Used"}
 
     def manhattan_distance(self, other):
         """
@@ -21,6 +21,7 @@ class Position:
             raise ValueError("Probability out of the boundaries")
         else:
             self.p0 = p
+            self.p = p
 
 
     def set_probability(self, p):    

@@ -4,16 +4,21 @@ import numpy as np
 from typing import Dict
 
 class CPT:
-    def __init__(self, ctype):
+    def __init__(self, ctype, rng=None):
         self.type = None
         self.cost = None
         self.cpt = None
+
+        if rng == None:
+            self.rng = np.random.default_rng()
+        else:
+            self.rng = rng
 
         self.read_config(ctype)
 
 
     def read_config(self, ctype):
-        ifile = Path(__file__).parent.parent / "resources" / "probabilities.yaml"
+        ifile = Path(__file__).parent.parent.parent / "resources" / "probabilities.yaml"
         
         with open(ifile, 'r') as f:
             data = yaml.safe_load(f)
@@ -51,7 +56,7 @@ class CPT:
         readings = list(distribution.keys())
         probabilities = list(distribution.values())
         
-        roll = np.random.choices(readings, weights=probabilities, k=1)[0]
+        roll = self.rng.choice(readings, p=probabilities)
         
         return roll
 

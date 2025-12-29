@@ -10,8 +10,7 @@ class Observations:
         self.observations = {}
         
 
-    def add_observation(self, row: int, col: int, 
-                        sensor_type: str, reading: str):
+    def add_observation(self, row: int, col: int, sensor_type: str, reading: str):
         """Add a observation"""
         key = (row, col)
         
@@ -21,8 +20,7 @@ class Observations:
         self.observations[key][sensor_type] = reading
         
 
-    def get_observation(self, row: int, col: int, 
-                       sensor_type: str) -> Optional[str]:
+    def get_observation(self, row: int, col: int, sensor_type: str) -> Optional[str]:
         """Get a observarion"""
         key = (row, col)
         if key in self.observations:
