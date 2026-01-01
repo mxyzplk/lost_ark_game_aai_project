@@ -4,7 +4,8 @@ import numpy as np
 from backend.gamelogic import GameLogic
 
 class ClickableCard(tk.Frame):
-    """Widget personalizado para cada célula do grid"""
+    """
+    """
     def __init__(self, master, row, col, game_logic, select_callback, **kwargs):
         super().__init__(master, **kwargs)
         self.row = row
@@ -31,7 +32,8 @@ class ClickableCard(tk.Frame):
         self.bind_click_events()
     
     def create_widgets(self):
-        """Cria os widgets internos do card"""
+        """
+        """
         # Frame de conteúdo (texto)
         self.content_frame = tk.Frame(self, bg='#f8f9fa')
         self.content_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
@@ -60,7 +62,6 @@ class ClickableCard(tk.Frame):
         )
         self.prob_label.pack(fill=tk.X, padx=10, pady=(0, 5))
         
-        # Leituras dos sensores
         self.sensor_frame = tk.Frame(self.content_frame, bg='#f8f9fa')
         self.sensor_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
         
@@ -81,19 +82,16 @@ class ClickableCard(tk.Frame):
     
     def bind_click_events(self):
         """Adiciona bind de clique a todos os elementos"""
-        # Bind no frame principal
         self.bind('<Button-1>', self.on_click)
         self.content_frame.bind('<Button-1>', self.on_click)
         self.header_frame.bind('<Button-1>', self.on_click)
         self.sensor_frame.bind('<Button-1>', self.on_click)
         
-        # Bind nos labels
         self.coord_label.bind('<Button-1>', self.on_click)
         self.prob_label.bind('<Button-1>', self.on_click)
         for label in self.sensor_labels.values():
             label.bind('<Button-1>', self.on_click)
         
-        # Efeito hover
         self.bind('<Enter>', self.on_enter)
         self.bind('<Leave>', self.on_leave)
     
@@ -159,11 +157,9 @@ class ClickableCard(tk.Frame):
         """Atualiza conteúdo baseado nos dados do jogo"""
         pos = self.game_logic.grid.positions[self.row, self.col]
         
-        # Atualiza probabilidade
         prob = pos.get_probability()
         self.prob_label.config(text=f"P: {prob*100:.4f}%")
         
-        # Atualiza leituras dos sensores
         sensors = ['GPR', 'MAG', 'VIS']
         for sensor in sensors:
             reading = pos.status.get(sensor, 'None')
@@ -192,7 +188,6 @@ class GameGUI:
         ttk.Label(main_frame, text="Game Configuration", font=("Arial", 16, "bold")).grid(
             row=0, column=0, columnspan=2, pady=(0, 20))
         
-        # Campos de configuração
         configs = [
             ("Rows:", "rows_var", 4),
             ("Columns:", "cols_var", 4),
@@ -236,20 +231,15 @@ class GameGUI:
         self.game_window.geometry("1200x800")
         self.game_window.protocol("WM_DELETE_WINDOW", self.on_game_window_close)
         
-        # Container principal
         main_container = ttk.Frame(self.game_window)
         main_container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
         
-        # Painel superior: Informações e controles
         self.create_top_panel(main_container)
         
-        # Área da grade com scroll
         self.create_grid_area(main_container)
         
-        # Painel de histórico
         self.create_history_panel(main_container)
         
-        # Cria a grade inicial
         self.create_grid()
     
     def create_top_panel(self, parent):
@@ -257,7 +247,6 @@ class GameGUI:
         top_panel = ttk.Frame(parent)
         top_panel.pack(side=tk.TOP, fill=tk.X, pady=(0, 20))
         
-        # Painel de status do jogo
         status_frame = ttk.LabelFrame(top_panel, text="Game Status", padding="15")
         status_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 15))
         
@@ -282,11 +271,9 @@ class GameGUI:
         )
         self.survey_label.pack(anchor=tk.W, pady=3)
         
-        # Painel de ações
         action_frame = ttk.LabelFrame(top_panel, text="Actions", padding="15")
         action_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         
-        # Seleção de sensor
         ttk.Label(action_frame, text="Select Sensor:", font=("Arial", 11)).pack(anchor=tk.W)
         self.sensor_var = tk.StringVar(value="GPR")
         
@@ -308,7 +295,6 @@ class GameGUI:
             )
             rb.pack(side=tk.LEFT, padx=10)
         
-        # Célula selecionada
         self.selected_cell_label = ttk.Label(
             action_frame, 
             text="📍 No cell selected",
@@ -317,7 +303,6 @@ class GameGUI:
         )
         self.selected_cell_label.pack(anchor=tk.W, pady=(0, 10))
         
-        # Botões de ação
         btn_frame = ttk.Frame(action_frame)
         btn_frame.pack(fill=tk.X, pady=(0, 10))
         
@@ -338,7 +323,6 @@ class GameGUI:
         )
         excavate_btn.pack(side=tk.LEFT)
         
-        # Configura estilo do botão perigoso
         style = ttk.Style()
         style.configure("Danger.TButton", foreground="white", background="#dc3545")
     
@@ -347,10 +331,8 @@ class GameGUI:
         grid_container = ttk.LabelFrame(parent, text="Archaeological Grid", padding="10")
         grid_container.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(0, 20))
         
-        # Canvas com scroll
         self.canvas = tk.Canvas(grid_container, bg="white", highlightthickness=0)
         
-        # Scrollbars
         h_scrollbar = ttk.Scrollbar(grid_container, orient=tk.HORIZONTAL, command=self.canvas.xview)
         v_scrollbar = ttk.Scrollbar(grid_container, orient=tk.VERTICAL, command=self.canvas.yview)
         
@@ -359,20 +341,16 @@ class GameGUI:
             yscrollcommand=v_scrollbar.set
         )
         
-        # Frame interno para os cards
         self.grid_frame = tk.Frame(self.canvas, bg="white")
         self.canvas_window = self.canvas.create_window(
             (0, 0), window=self.grid_frame, anchor=tk.NW
         )
         
-        # Layout
         v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
-        # Bind para ajuste de scroll
         self.grid_frame.bind("<Configure>", self.on_frame_configure)
-        self.canvas.bind("<Configure>", self.on_canvas_configure)
     
     def create_history_panel(self, parent):
         """Cria painel de histórico"""
@@ -394,13 +372,8 @@ class GameGUI:
         """Atualiza scrollregion quando o frame muda de tamanho"""
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
-    def on_canvas_configure(self, event):
-        """Ajusta o tamanho do frame interno quando o canvas muda"""
-        self.canvas.itemconfig(self.canvas_window, width=event.width)
-    
     def create_grid(self):
         """Cria a grade de células"""
-        # Limpa grade anterior
         self.cell_cards.clear()
         for widget in self.grid_frame.winfo_children():
             widget.destroy()
@@ -408,7 +381,6 @@ class GameGUI:
         rows = self.game.grid.rows
         cols = self.game.grid.columns
         
-        # Cria os cards
         for i in range(rows):
             for j in range(cols):
                 card = ClickableCard(
@@ -423,28 +395,23 @@ class GameGUI:
     
     def select_cell(self, row, col):
         """Seleciona uma célula"""
-        # Deseleciona célula anterior
         if self.selected_cell:
             old_row, old_col = self.selected_cell
             if (old_row, old_col) in self.cell_cards:
                 self.cell_cards[(old_row, old_col)].deselect()
         
-        # Seleciona nova célula
         self.selected_cell = (row, col)
         if (row, col) in self.cell_cards:
             self.cell_cards[(row, col)].select()
         
-        # Atualiza label
         self.selected_cell_label.config(
             text=f"📍 Selected: ({row}, {col})",
             foreground="#007bff"
         )
         
-        # Atualiza probabilidade
         pos = self.game.grid.positions[row, col]
         prob = pos.get_probability()
         
-        # Atualiza o card (já deve estar atualizado, mas por garantia)
         self.update_cell_content(row, col)
     
     def update_cell_content(self, row, col):
@@ -470,26 +437,21 @@ class GameGUI:
         row, col = self.selected_cell
         sensor_type = self.sensor_var.get()
         
-        # Executa pesquisa
         reading, success, cost = self.game.survey(row, col, sensor_type)
         
         if not success:
             messagebox.showwarning("Cannot Survey", reading)
             return
         
-        # Atualiza interface
         self.update_interface()
         
-        # Adiciona ao histórico
         message = f"Survey at ({row},{col}) with {sensor_type}: {reading} (Cost: {cost} points)"
         self.add_history_message(message)
         
-        # Atualiza status
         self.selected_cell_label.config(
             text=f"📍 Selected: ({row}, {col}) - {sensor_type}: {reading}"
         )
         
-        # Verifica orçamento
         if self.game.budget <= 0:
             messagebox.showwarning("Budget Depleted", "You have no more budget! You must excavate now.")
     
@@ -505,7 +467,6 @@ class GameGUI:
         
         row, col = self.selected_cell
         
-        # Confirmação
         if not messagebox.askyesno(
             "Confirm Excavation",
             f"Are you sure you want to excavate at ({row},{col})?\n"
@@ -513,13 +474,10 @@ class GameGUI:
         ):
             return
         
-        # Executa escavação
         success, score = self.game.excavate(row, col)
         
-        # Atualiza interface
         self.update_interface()
         
-        # Mostra resultado
         if success:
             messagebox.showinfo(
                 "Congratulations!",
@@ -528,7 +486,6 @@ class GameGUI:
             )
             self.add_history_message(f"🚨 EXCAVATED at ({row},{col}): SUCCESS! Final Score: {score}")
             
-            # Destaca localização do artefato
             if (row, col) in self.cell_cards:
                 card = self.cell_cards[(row, col)]
                 card.config(bg='#d4edda', relief="solid")
@@ -540,27 +497,22 @@ class GameGUI:
             )
             self.add_history_message(f"🚨 EXCAVATED at ({row},{col}): FAILED! Score: 0")
             
-            # Destaca palpite incorreto
             if (row, col) in self.cell_cards:
                 card = self.cell_cards[(row, col)]
                 card.config(bg='#f8d7da', relief="solid")
     
     def update_interface(self):
         """Atualiza toda a interface"""
-        # Atualiza labels de status
         self.budget_label.config(text=f"💰 Budget: {self.game.budget} points")
         self.score_label.config(text=f"🏆 Score: {self.game.score} points")
         self.survey_label.config(text=f"📊 Surveys: {self.game.survey_count}")
         
-        # Atualiza todas as células
         self.update_all_cells()
         
-        # Re-seleciona célula atual
         if self.selected_cell:
             row, col = self.selected_cell
             self.select_cell(row, col)
         
-        # Atualiza scrollregion
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def add_history_message(self, message):
