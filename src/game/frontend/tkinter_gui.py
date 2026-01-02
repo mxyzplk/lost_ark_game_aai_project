@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
-import numpy as np
 from backend.gamelogic import GameLogic
 
-class ClickableCard(tk.Frame):
+class ClickableGrid(tk.Frame):
     """
+    Class that creates the game grids
     """
     def __init__(self, master, row, col, game_logic, select_callback, **kwargs):
         super().__init__(master, **kwargs)
@@ -14,7 +14,6 @@ class ClickableCard(tk.Frame):
         self.select_callback = select_callback
         self.is_selected = False
         
-        # Configuração visual
         self.config(
             borderwidth=2,
             relief="ridge",
@@ -24,21 +23,18 @@ class ClickableCard(tk.Frame):
         )
         self.grid_propagate(False)
         
-        # Cria a estrutura interna
         self.create_widgets()
         self.update_content()
         
-        # Bind de clique em TODO o widget
         self.bind_click_events()
     
     def create_widgets(self):
         """
+        Creates internal widgets (frames, labels, etc.)
         """
-        # Frame de conteúdo (texto)
         self.content_frame = tk.Frame(self, bg='#f8f9fa')
         self.content_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
         
-        # Cabeçalho com coordenadas
         self.header_frame = tk.Frame(self.content_frame, bg='#f8f9fa')
         self.header_frame.pack(fill=tk.X, padx=10, pady=(10, 5))
         
@@ -51,7 +47,6 @@ class ClickableCard(tk.Frame):
         )
         self.coord_label.pack(side=tk.LEFT)
         
-        # Probabilidade
         self.prob_label = tk.Label(
             self.content_frame,
             text="P: 0.0000",
@@ -81,7 +76,7 @@ class ClickableCard(tk.Frame):
             self.sensor_labels[sensor] = sensor_label
     
     def bind_click_events(self):
-        """Adiciona bind de clique a todos os elementos"""
+        """Adds click bindings to all interactive elements"""
         self.bind('<Button-1>', self.on_click)
         self.content_frame.bind('<Button-1>', self.on_click)
         self.header_frame.bind('<Button-1>', self.on_click)
@@ -96,11 +91,11 @@ class ClickableCard(tk.Frame):
         self.bind('<Leave>', self.on_leave)
     
     def on_click(self, event):
-        """Manipula cliques"""
+        """Handles click events on the grid cell"""
         self.select_callback(self.row, self.col)
     
     def on_enter(self, event):
-        """Efeito hover - destaque sutil"""
+        """Selection effect"""
         if not self.is_selected:
             self.config(bg='#e9ecef')
             self.content_frame.config(bg='#e9ecef')
@@ -112,7 +107,7 @@ class ClickableCard(tk.Frame):
                 label.config(bg='#e9ecef')
     
     def on_leave(self, event):
-        """Remove efeito hover"""
+        """Removes selection effect"""
         if not self.is_selected:
             self.config(bg='#f8f9fa')
             self.content_frame.config(bg='#f8f9fa')
@@ -124,7 +119,7 @@ class ClickableCard(tk.Frame):
                 label.config(bg='#f8f9fa')
     
     def select(self):
-        """Marca como selecionado"""
+        """Select"""
         self.is_selected = True
         self.config(
             bg='#d0e7ff',
@@ -139,7 +134,7 @@ class ClickableCard(tk.Frame):
             label.config(bg='#d0e7ff')
     
     def deselect(self):
-        """Remove seleção"""
+        """Deselect"""
         self.is_selected = False
         self.config(
             bg='#f8f9fa',
@@ -154,7 +149,9 @@ class ClickableCard(tk.Frame):
             label.config(bg='#f8f9fa')
     
     def update_content(self):
-        """Atualiza conteúdo baseado nos dados do jogo"""
+        """
+        Updates grid content
+        """
         pos = self.game_logic.grid.positions[self.row, self.col]
         
         prob = pos.get_probability()
@@ -167,6 +164,9 @@ class ClickableCard(tk.Frame):
 
 
 class GameGUI:
+    """
+    Game interface
+    """
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Raiders of the Lost Ark - Game Configuration")
@@ -176,12 +176,12 @@ class GameGUI:
         self.game_window = None
         self.selected_cell = None
         self.selected_sensor = "GPR"
-        self.cell_cards = {}  # Dicionário para armazenar os cards
+        self.cell_cards = {}  # Dicionário para armazenar os grids
         
         self.create_config_window()
     
     def create_config_window(self):
-        """Janela de configuração do jogo"""
+        """Configuration window"""
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
@@ -206,7 +206,7 @@ class GameGUI:
             row=5, column=0, columnspan=2, pady=20)
     
     def create_game(self):
-        """Cria o jogo com os parâmetros configurados"""
+        """Generates a game"""
         try:
             rows = int(self.rows_var.get())
             cols = int(self.cols_var.get())
@@ -225,7 +225,7 @@ class GameGUI:
             messagebox.showerror("Error", f"Failed to create game: {str(e)}")
     
     def create_game_window(self):
-        """Cria a janela principal do jogo"""
+        """Main game window"""
         self.game_window = tk.Toplevel()
         self.game_window.title("Raiders of the Lost Ark")
         self.game_window.geometry("1200x800")
@@ -243,7 +243,7 @@ class GameGUI:
         self.create_grid()
     
     def create_top_panel(self, parent):
-        """Cria o painel superior com informações e controles"""
+        """Control panel"""
         top_panel = ttk.Frame(parent)
         top_panel.pack(side=tk.TOP, fill=tk.X, pady=(0, 20))
         
@@ -327,7 +327,7 @@ class GameGUI:
         style.configure("Danger.TButton", foreground="white", background="#dc3545")
     
     def create_grid_area(self, parent):
-        """Cria a área da grade com scroll"""
+        """Grids container"""
         grid_container = ttk.LabelFrame(parent, text="Archaeological Grid", padding="10")
         grid_container.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(0, 20))
         
@@ -353,7 +353,7 @@ class GameGUI:
         self.grid_frame.bind("<Configure>", self.on_frame_configure)
     
     def create_history_panel(self, parent):
-        """Cria painel de histórico"""
+        """Game History"""
         history_frame = ttk.LabelFrame(parent, text="Survey History", padding="10")
         history_frame.pack(side=tk.BOTTOM, fill=tk.X)
         
@@ -369,11 +369,11 @@ class GameGUI:
         self.add_history_message("Game started. Select a cell and choose a sensor.")
     
     def on_frame_configure(self, event):
-        """Atualiza scrollregion quando o frame muda de tamanho"""
+        """Update the scroll region"""
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def create_grid(self):
-        """Cria a grade de células"""
+        """Creates the cell grids"""
         self.cell_cards.clear()
         for widget in self.grid_frame.winfo_children():
             widget.destroy()
@@ -383,7 +383,7 @@ class GameGUI:
         
         for i in range(rows):
             for j in range(cols):
-                card = ClickableCard(
+                card = ClickableGrid(
                     self.grid_frame,
                     row=i,
                     col=j,
@@ -415,17 +415,17 @@ class GameGUI:
         self.update_cell_content(row, col)
     
     def update_cell_content(self, row, col):
-        """Atualiza conteúdo de uma célula específica"""
+        """Updates content of a specific cell"""
         if (row, col) in self.cell_cards:
             self.cell_cards[(row, col)].update_content()
     
     def update_all_cells(self):
-        """Atualiza todas as células"""
+        """Updates content of all cells"""
         for (row, col), card in self.cell_cards.items():
             card.update_content()
     
     def perform_survey(self):
-        """Executa pesquisa na célula selecionada"""
+        """Executes survey action on selected cell"""
         if not self.selected_cell:
             messagebox.showwarning("No Cell Selected", "Please select a cell first.")
             return
@@ -456,7 +456,7 @@ class GameGUI:
             messagebox.showwarning("Budget Depleted", "You have no more budget! You must excavate now.")
     
     def perform_excavation(self):
-        """Executa escavação na célula selecionada"""
+        """Executes excavation action on selected cell"""
         if not self.selected_cell:
             messagebox.showwarning("No Cell Selected", "Please select a cell first.")
             return
@@ -502,7 +502,7 @@ class GameGUI:
                 card.config(bg='#f8d7da', relief="solid")
     
     def update_interface(self):
-        """Atualiza toda a interface"""
+        """Updates game interface"""
         self.budget_label.config(text=f"💰 Budget: {self.game.budget} points")
         self.score_label.config(text=f"🏆 Score: {self.game.score} points")
         self.survey_label.config(text=f"📊 Surveys: {self.game.survey_count}")
@@ -516,19 +516,19 @@ class GameGUI:
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def add_history_message(self, message):
-        """Adiciona mensagem ao histórico"""
+        """Add msg to history"""
         self.history_text.config(state=tk.NORMAL)
         self.history_text.insert(tk.END, f"• {message}\n")
         self.history_text.see(tk.END)
         self.history_text.config(state=tk.DISABLED)
     
     def on_game_window_close(self):
-        """Fecha a janela do jogo"""
+        """Close gamw window"""
         if messagebox.askyesno("Quit Game", "Are you sure you want to quit?"):
             self.game_window.destroy()
             self.root.quit()
     
     def run(self):
-        """Inicia a aplicação"""
+        """Game run"""
         self.root.mainloop()
 
