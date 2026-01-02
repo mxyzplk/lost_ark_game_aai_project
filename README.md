@@ -10,13 +10,12 @@ Python packages: numpy, yaml, pathlib, typing, tkinter
 # Folder structure
 
 lost_ark_game_aai_project/
-│
-├── src/                    
-    └── game
-    |     └── backend       # .py do backend
-    |     └── frontend      # .py da interface gráfica
-    |     └── __main__.py   # Ponto de entrada
-    └─── resources          # ficheiros de configuração
+src/                    
+src/game
+src/game/backend       # .py do backend
+src/game/frontend      # .py da interface gráfica
+src/game/__main__.py   # Ponto de entrada
+src/resources          # ficheiros de configuração
 
 # How to use it
 
