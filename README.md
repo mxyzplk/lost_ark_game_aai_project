@@ -5,17 +5,23 @@ This is a project for a Applied Artificial Inteligence class.
 # Requirements:
 
 Python: 3:13:5
+
 Python packages: numpy, yaml, pathlib, typing, tkinter
 
 # Folder structure
 
-lost_ark_game_aai_project/
-src/                    
+src/
+
 src/game
+
 src/game/backend       # .py do backend
+
 src/game/frontend      # .py da interface gráfica
+
 src/game/__main__.py   # Ponto de entrada
+
 src/resources          # ficheiros de configuração
+
 
 # How to use it
 
