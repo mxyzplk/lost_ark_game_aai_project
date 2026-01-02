@@ -28,4 +28,4 @@ src/resources          # ficheiros de configuração
 1) put the files in a folder
 2) set the python environment
 3) install the dependencies
-4) execute "__main__".py (python "__main__".py)
+4) execute \_\_main__.py (python \_\_main\_\_.py)
